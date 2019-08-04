@@ -6,54 +6,55 @@ import random, json
 
 class Thermostat:
 
-    def __init__():
+    def __init__(self):
         self.temperature = 70
         self.setting = "OFF"
-        self.connection = Arduino
+        #self.connection = Arduino
 
-    def _get_state():
+    def _get_state(self):
         return self.temperature, self.setting
 
-    def _set_state(temp, set):
+    def _set_state(self, temp, setter):
+        self.temperature = temp
+        self.setting = setter
         return (True or False)
 
 class Thermostat_API:
 
     app = None
-    
-    def __init__(__name__):
+
+    def __init__(self, __name__):
         self.app = Flask(__name__)
         self.therm = Thermostat()
-    
+
     def run(self):
         self.app.run()
 
     @app.route('/')
-    def output():
+    def output(self):
         temp, set = self.therm._get_state()
         # serve index template
         return render_template('index.html', temperature=temp, setting=set)
 
     @app.route('/receiver', methods = ['POST'])
-    def worker():
+    def worker(self):
         # read json + reply
         data = request.get_json()
         result = ''
-        
+
         for item in data:
             # loop over every row
             temp = int(item['temperature'])
-            set = str(item['setting'])
-            
-            if(set == 'HEAT'):
-                self.therm._set_state(temp, set)
-            
-            else if(set == 'OFF'):
-                self.therm._set_state(temp, set)
-                
-            else if(set == 'COOL'):
-                self.therm._set_state(temp, set)
-                
+            setter = str(item['setting'])
+
+            if(setter == 'HEAT'):
+                self.therm._set_state(temp, setter)
+
+            elif(set == 'OFF'):
+                self.therm._set_state(temp, setter)
+
+            elif(set == 'COOL'):
+                self.therm._set_state(temp, setter)
 
 if __name__ == '__main__':
     # run!
